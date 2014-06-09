@@ -15,7 +15,18 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
 
   config.vm.define 'vm00' do |node|
-    node.vm.hostname = 'vm00.hn.hackernews.base.local'
+    node.vm.hostname = 'vm00.hn.hackernews.local'
+  end
+
+  config.vm.synced_folder "hieradata", "/var/lib/hiera"
+
+  config.vm.provision "puppet" do |puppet|
+    puppet.manifests_path = "manifests/"
+    puppet.manifest_file = "vm00.hn.hackernews.local.pp"
+    puppet.module_path = "modules/"
+    puppet.options = "--verbose --debug"
+
+    puppet.hiera_config_path = "hiera.yaml"
   end
 
   # Disable automatic box update checking. If you disable this, then
